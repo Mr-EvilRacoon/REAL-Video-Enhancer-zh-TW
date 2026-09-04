@@ -1,0 +1,80 @@
+# 修改聲明
+
+本專案是 [REAL-Video-Enhancer](https://github.com/TNTwise/REAL-Video-Enhancer) 的修改版本（Modified Version），基於 v2.4.1 進行繁體中文本地化。
+
+---
+
+## 修改者
+
+- **發布者**：Mr-EvilRacoon
+- **翻譯協作**：Hermes Agent（LongCat 2.0 模型）
+- **修改日期**：2026-09-03
+
+---
+
+## 原始專案資訊
+
+- **原始專案名稱**：REAL Video Enhancer
+- **主要作者**：TNTwise
+- **原始專案網址**：https://github.com/TNTwise/REAL-Video-Enhancer
+- **授權條款**：GNU Affero General Public License v3.0 (AGPL-3.0)
+- **上游 commit SHA**：`8541c46ca14e6f84fc86c5b9d3b75373e2573245`（Update README.md，Sep 2, 2026）
+
+---
+
+## 修改內容
+
+本專案對原始程式進行了以下修改：
+
+1. **新增 `src/i18n.py`** — 國際化（i18n）翻譯系統
+   - 新增 `ZH_TW` 字典（繁體中文翻譯）
+   - 新增 `HTML_PHRASE_MAP` 字典（HTML 工具提示翻譯）
+   - 新增 `tr()` 函數（翻譯輔助）
+   - 新增 `_patched_translate()` 函數（攔截 QCoreApplication.translate）
+   - 新增 `load_language_from_settings()` 函數（從設定載入語言）
+
+2. **修改 `REAL-Video-Enhancer.py`**
+   - 加入 `from src.i18n import load_language_from_settings, tr, get_language, set_language`
+   - 加入 `load_language_from_settings()` 呼叫
+   - 加入語言切換功能選單
+
+3. **修改 `src/Util.py`**
+   - 加入 `currentDirectory()` 函數（供 i18n 模組使用）
+
+4. **修改 `build.py`**
+   - 加入 `--add-data "src;src"` 確保 src/ 資料夾被打包
+   - 加入 `--hidden-import src.i18n` 等 hidden imports
+   - 修正命令列解析（使用 shlex.split）
+
+5. **修復原專案拼字錯誤**
+   - `recomended` → `recommended`（多處）
+   - `compadibility` → `compatibility`（多處）
+   - `Audo` → `Auto`
+   - `isses` → `issues`
+   - `transfered` → `transferred`
+   - `accuate` → `accurate`
+   - `failes` → `fails`
+   - `compadible` → `compatible`
+
+---
+
+## 保留聲明
+
+- 本專案保留原始專案的所有版權聲明
+- 本專案保留原始專案的 LICENSE 檔案
+- 本專案保留原始專案的 Credits 資訊
+- 本專案保留原始作者的贊助連結（Ko-Fi、Steam、Discord）
+
+---
+
+## 智慧財產權聲明
+
+本專案為衍生修改版本，原始程式之著作權歸屬原作者 TNTwise 及所有上游貢獻者。本專案中使用之第三方元件（PySide6、PyInstaller、NCNN、PyTorch 等）之智慧財產權則歸屬其各自之作者與授權條款。
+
+本專案之修改部分（i18n.py、翻譯字典、打包腳本等）由 Mr-EvilRacoon 基於 AGPL-3.0 授權條款進行修改與發布。
+
+---
+
+## 免責聲明
+
+本專案為非官方修改版，與 TNTwise 無任何關聯。原始專案之所有權利歸屬原作者及所有貢獻者。
