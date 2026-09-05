@@ -209,8 +209,29 @@ class DownloadTab:
         ):  # check for network before installing
             return_code = self.downloadDeps.downloadPythonDeps(dep, pytorch_ver.torch_version, torchvision_ver, pytorch_backend.lower(), install)
             if return_code == 0 and not self.skip_info_popup:
+                # Refresh available backends after successful download
+                self._refreshAvailableBackends()
                 RegularQTPopup(
                     "Download Complete\nPlease restart the application to apply changes."
                 )
             elif return_code != 0:
                 RegularQTPopup("Download Failed!\nPlease check logs for more info.")
+
+    def _refreshAvailableBackends(self):
+        """Refresh the backend list in the Process tab after downloading new dependencies."""
+        try:
+            from ..Backendhandler import BackendHandler
+            backendHandler = BackendHandler(self.parent)
+            newBackends, _ = backendHandler.getAvailableBackends()
+            if newBackends:
+                self.backends = newBackends
+                # Update Process tab backendComboBox
+                if hasattr(self.parent, 'backendComboBox'):
+                    current = self.parent.backendComboBox.currentText()
+                    self.parent.backendComboBox.clear()
+                    self.parent.backendComboBox.addItems(newBackends)
+                    # Restore previous selection if still available
+                    if current in newBackends:
+                        self.parent.backendComboBox.setCurrentText(current)
+        except Exception as e:
+            log(f"Failed to refresh backends: {e}")
