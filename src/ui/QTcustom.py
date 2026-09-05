@@ -520,7 +520,7 @@ class SettingUpBackendPopup(QtWidgets.QDialog):
         self.iconLabel.setPixmap(pixmap)
         self.iconLabel.setAlignment(Qt.AlignCenter)
         self.label.setAlignment(Qt.AlignCenter)
-        self.label.setFont(QFont("Arial", 20))
+        self.label.setFont(QFontDatabase.systemFont(QFontDatabase.FixedFont))
         self.layout2.addWidget(self.iconLabel)
         self.layout2.addWidget(self.label)
         self.setLayout(self.layout2)
