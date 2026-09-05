@@ -45,3 +45,11 @@ log.txt
 
 # Build artifacts
 src/__pycache__/
+
+# Release assets (uploaded to GitHub Releases, not in repo)
+*.zip
+*-Windows-Setup_x86_64.exe
+
+# Backup
+_backup_security_patch/
+Temp/
