@@ -11,15 +11,10 @@
 
 ### 修復項目
 
-- **拼字錯誤修正**：
-  - `recomended` → `recommended`（多處）
-  - `compadibility` → `compatibility`（多處）
-  - `Audo` → `Auto`
-  - `isses` → `issues`
-  - `transfered` → `transferred`
-  - `accuate` → `accurate`
-  - `failes` → `fails`
-  - `compadible` → `compatible`
+- **#251 可攜版無法啟動**：加入 tar.gz 例外處理、損壞自動清理、下載重試機制（最多 3 次，指數退避）
+- **#241 字體問題**：將 `QTcustom.py` 中的 `QFont("Arial", 20)` 改為 `QFontDatabase.systemFont(QFontDatabase.FixedFont)`，確保跨平台字型一致性
+- **#205 安裝路徑**：NSIS 安裝頁面已包含 `MUI_PAGE_DIRECTORY`，使用者可選擇安裝路徑
+- **安全修補**：`Backendhandler.py` 改用 `ast.literal_eval()` 避免程式碼注入；`i18n.py` 移除 debug 檔案寫入；`RenderQueue.py` 初始化 `self._upscaleModel`
 
 ### 技術修改
 
