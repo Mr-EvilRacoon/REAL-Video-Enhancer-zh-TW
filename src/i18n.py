@@ -399,17 +399,9 @@ _original_translate = QCoreApplication.translate
 def _patched_translate(context, sourceText, disambiguation=None, n=-1):
     import sys
     import re
-    try:
-            f.write(f"context={context}, sourceText={repr(sourceText[:150]) if sourceText else None}\n")
-    except Exception:
-        pass
     if _current_lang != "en" and sourceText:
         if sourceText in ZH_TW:
             result = ZH_TW[sourceText]
-            try:
-                    f.write(f"  -> ZH_TW: {result}\n")
-            except Exception:
-                pass
             return result
         # Check for HTML content - strip tags for matching
         if "<html>" in sourceText or "<span" in sourceText or "<p>" in sourceText:

@@ -48,6 +48,7 @@ class RenderOptions:
         self._deblurModelFile = deblurModelFile
         self._upscaleModelFile = upscaleModelFile
         self._upscaleModelArch = upscaleModelArch
+        self._upscaleModel = None
         self._denoiseModelFile = denoiseModelFile
         self._decompressModelFile = decompressModelFile
         self._sceneChangeModelFile = sceneChangeModelFile

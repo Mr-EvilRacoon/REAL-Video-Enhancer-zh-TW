@@ -1,4 +1,5 @@
 import os
+import ast
 
 from .constants import BACKEND_PATH, PYTHON_EXECUTABLE_PATH, PYTHON_DIRECTORY, PLATFORM, IS_INSTALLED, IS_FLATPAK, HAS_NETWORK_ON_STARTUP, CWD
 from .Util import (
@@ -49,7 +50,7 @@ class BackendHandler:
 
         # Convert the string representation of the list to an actual list
         try:
-            backends = eval(backends_str)
+            backends = ast.literal_eval(backends_str)
         except Exception:
             backends = []
 
