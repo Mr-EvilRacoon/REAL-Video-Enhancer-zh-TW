@@ -15,6 +15,7 @@
 - **#241 字體問題**：將 `QTcustom.py` 中的 `QFont("Arial", 20)` 改為 `QFontDatabase.systemFont(QFontDatabase.FixedFont)`，確保跨平台字型一致性
 - **#205 安裝路徑**：NSIS 安裝頁面已包含 `MUI_PAGE_DIRECTORY`，使用者可選擇安裝路徑
 - **GPU 偵測 AMD/Intel 支援**：`GPUDetect.py` 不再僅限 NVIDIA，新增 AMD（RX 5000+ → ROCm）和 Intel（Arc → XPU）的偵測，讓 AMD 顯示卡用戶也能選擇 GPU 加速
+- **下載頁面效能描述翻譯**：NCNN Vulkan、PyTorch、TensorRT、DirectML 按鈕說明已完整翻譯為繁體中文
 - **安全修補**：`Backendhandler.py` 改用 `ast.literal_eval()` 避免程式碼注入；`i18n.py` 移除 debug 檔案寫入；`RenderQueue.py` 初始化 `self._upscaleModel`
 
 ### 技術修改
