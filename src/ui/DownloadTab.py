@@ -208,17 +208,27 @@ class DownloadTab:
             "https://pypi.org/"
         ):  # check for network before installing
             return_code = self.downloadDeps.downloadPythonDeps(dep, pytorch_ver.torch_version, torchvision_ver, pytorch_backend.lower(), install)
+            # Always refresh UI after download attempt (even if return_code != 0, packages may have been partially installed)
+            self._refreshAvailableBackends()
             if return_code == 0 and not self.skip_info_popup:
-                # Refresh available backends after successful download
-                self._refreshAvailableBackends()
                 RegularQTPopup(
                     "Download Complete\nPlease restart the application to apply changes."
                 )
             elif return_code != 0:
-                RegularQTPopup("Download Failed!\nPlease check logs for more info.")
+                # Check if backend is actually installed now
+                if self.backends and (
+                    (dep == "ncnn" and "ncnn" in self.backends) or
+                    (dep == "tensorrt" and "tensorrt" in self.backends) or
+                    (dep == "torch" and any("pytorch" in b for b in self.backends))
+                ):
+                    RegularQTPopup(
+                        "Download Complete\nPlease restart the application to apply changes."
+                    )
+                else:
+                    RegularQTPopup("Download Failed!\nPlease check logs for more info.")
 
     def _refreshAvailableBackends(self):
-        """Refresh the backend list in the Process tab after downloading new dependencies."""
+        """Refresh the backend list in the Process tab and update UI buttons after downloading new dependencies."""
         try:
             from ..Backendhandler import BackendHandler
             backendHandler = BackendHandler(self.parent)
@@ -233,5 +243,10 @@ class DownloadTab:
                     # Restore previous selection if still available
                     if current in newBackends:
                         self.parent.backendComboBox.setCurrentText(current)
+                # Update download page buttons (show/hide download vs uninstall)
+                self.hideUninstallButtons()
+                self.showUninstallButton(newBackends)
+                # Force UI repaint
+                self.parent.repaint()
         except Exception as e:
             log(f"Failed to refresh backends: {e}")

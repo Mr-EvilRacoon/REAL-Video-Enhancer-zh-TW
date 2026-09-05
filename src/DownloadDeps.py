@@ -314,6 +314,7 @@ class DownloadDependencies:
                 "https://download.pytorch.org/whl/", # search this first, needs to be last in the list 
                 "--trusted-host",
                 "download.pytorch.org",
+                "--ignore-installed",  # Skip packages that are already installed
             ]
         else:
             command += ["-y"]
