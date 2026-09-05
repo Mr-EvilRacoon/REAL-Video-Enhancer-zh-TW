@@ -44,8 +44,10 @@ class DownloadTab:
 
 
         # set this all to not visible, as scrapping the idea for now.
+        # Note: ROCm 7.1+ supports Windows for AMD GPUs (RX 5000+), so we keep it on all platforms
         if PLATFORM != "linux":
-            remove_combobox_item_by_text(self.parent.pytorch_backend, "ROCm")
+            # Keep ROCm available on Windows for AMD GPUs with ROCm 7.1+
+            pass
         else:
             if CPU_ARCH == "arm64":
                 remove_combobox_item_by_text(self.parent.pytorch_backend, "XPU")
