@@ -151,7 +151,18 @@ class Python(Dependency):
         download_link = self.get_download_link()
         FileHandler.createDirectory(os.path.dirname(self.download_path))
         DownloadProgressPopup(link = download_link, downloadLocation=self.download_path, title = f"Downloading Python {PYTHON_VERSION}")
-        extractTarGZ(self.download_path)
+        # Retry up to 3 times on download failure
+        for attempt in range(3):
+            try:
+                extractTarGZ(self.download_path)
+                return  # Success
+            except (tarfile.ReadError, EOFError, gzip.BadGzipFile, IOError) as e:
+                log(f"Download attempt {attempt + 1} failed: {e}")
+                if attempt < 2:  # Don't sleep on last attempt
+                    import time
+                    time.sleep(2 ** attempt)  # Exponential backoff
+                else:
+                    raise  # Re-raise on final attempt
     
     def get_version(self):
         return subprocess.run([PYTHON_EXECUTABLE_PATH, "--version"], check=True, capture_output=True, text=True).stdout.strip().split(" ")[1] # this extracts the version number from the output

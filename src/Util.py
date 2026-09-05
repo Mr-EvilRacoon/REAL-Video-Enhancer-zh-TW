@@ -3,6 +3,7 @@ import warnings
 import requests
 import stat
 import tarfile
+import gzip
 import subprocess
 import shutil
 import platform
@@ -363,24 +364,50 @@ def downloadFile(link, downloadLocation):
         link,
         stream=True,
     )
+    response.raise_for_status()  # Raise exception for HTTP errors
 
+    content_length = response.headers.get('content-length')
+    if content_length:
+        content_length = int(content_length)
+
+    downloaded = 0
     with open(downloadLocation, "wb") as f:
-        for chunk in response.iter_content(chunk_size=1024):
-            f.write(chunk)
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+                downloaded += len(chunk)
+
+    # Validate downloaded size
+    if content_length and downloaded != content_length:
+        os.remove(downloadLocation)
+        raise IOError(f"Download incomplete: got {downloaded} bytes, expected {content_length}")
 
 
 def extractTarGZ(file):
     """
-    Extracts a tar gz in the same directory as the tar file and deleted it after extraction.
+    Extracts a tar gz in the same directory as the tar file and deletes it after extraction.
     """
     origCWD = os.getcwd()
     dir_path = os.path.dirname(os.path.realpath(file))
     os.chdir(dir_path)
     log("Extracting: " + file)
-    with tarfile.open(file, "r:gz") as f:
-        f.extractall()
-    removeFile(file)
-    os.chdir(origCWD)
+    
+    try:
+        with tarfile.open(file, "r:gz") as f:
+            f.extractall()
+        removeFile(file)
+    except (tarfile.ReadError, EOFError, gzip.BadGzipFile) as e:
+        log(f"ERROR: Failed to extract {file}: {e}")
+        # Remove the corrupted file so it can be re-downloaded
+        if os.path.exists(file):
+            removeFile(file)
+        # Remove partially extracted directory to avoid corruption
+        extracted_dir = os.path.splitext(os.path.splitext(file)[0])[0]
+        if os.path.exists(extracted_dir):
+            removeFolder(extracted_dir)
+        raise  # Re-raise so the caller knows extraction failed
+    finally:
+        os.chdir(origCWD)
 
 
 def openLink(link: str):
